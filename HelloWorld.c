@@ -3,7 +3,7 @@
 
 int main(){
 
-printf("\nHello World,\n This is Swati Padmanabhan's first C program in Linux Ubuntu\n"); 
+printf("\nHello World,\n This is my first C program in Linux Ubuntu\n"); 
 return 0; 
 
 }

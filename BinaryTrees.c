@@ -1,6 +1,5 @@
 // Learning binary trees for Huffman Coding. 
 // July 8, 2014
-// Swati Padmanabhan
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,6 +1,5 @@
 // Huffman Coding
 // June 11, 2014
-// Swati Padmanabhan
 
 #include <stdio.h>
 #include <stdlib.h>
