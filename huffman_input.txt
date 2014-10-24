@@ -1,0 +1,1 @@
+this is a stupid example of huffman coding because it does not allow punctuation or line breaks
