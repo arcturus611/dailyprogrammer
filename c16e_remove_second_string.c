@@ -2,6 +2,7 @@
 	//remove string characters
 	//gcc -g -std=c99 -Wall c16e_remove_second_string.c -o c16e_remove_second_string
 	//To run: ./c16e_remove_second_string String1 String2
+	// Note: the solution by /u/defrost is excellent in understanding the use of several pointers for the same address. 
 	
 	#include<stdio.h>
 	#include<string.h>
