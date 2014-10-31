@@ -4,91 +4,117 @@
 	#include<stdio.h>	
 	#include<stdlib.h>
 	#include<math.h>
+	#include<stdbool.h>
 	
 	#define NUM_PLANETS 8 // oh, pluto.
-	#define FULL_CIRCLE 360
-	#define HALF_CIRCLE 180
-	#define MAX_ANG_POS_DIFF 1 //max degree difference tolerated
+	#define PI 3.14159
+	#define TOL_LAMBDA_DIFF 0.005
 	
 	char* planet_names[NUM_PLANETS] = {"mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"};
-	float planet_radii[NUM_PLANETS] = {0.387, 0.723, 1, 1.524, 5.204, 9.582, 19.189, 30.071};
-	float planet_years[NUM_PLANETS] = {0.241, 0.615, 1, 1.881, 11.862, 29.457, 84.017, 164.795};
+	double planet_radii[NUM_PLANETS] = {0.387, 0.723, 1, 1.524, 5.204, 9.582, 19.189, 30.071};
+	double planet_years[NUM_PLANETS] = {0.241, 0.615, 1, 1.881, 11.862, 29.457, 84.017, 164.795};
 	
-	typedef struct _planet_{
+	typedef struct _celestial_body_{
 		char* name;
-		float radius;
-		float ang_vel;
-		float ang_pos;
-	}planet;
+		double radius;
+		double angle;
+		double x;
+		double y;
+	}celestial_body;
 	
-	planet* init_planets(){
-		planet* solar_system = malloc(NUM_PLANETS*sizeof(planet)); 
+	celestial_body* init_celestial_bodies(){
+		celestial_body* solar_system = malloc((1+NUM_PLANETS)*sizeof(celestial_body)); 
+		
+		solar_system[8].name = "sun";
+		solar_system[8].radius = 0;
+		solar_system[8].angle = 0;
+		solar_system[8].x = 0;
+		solar_system[8].y = 0;
 		
 		for (int i = 0; i<NUM_PLANETS; i++){
 			solar_system[i].name = 	planet_names[i];	
-			solar_system[i].radius = planet_radii[i]; //redundant info! 
-			solar_system[i].ang_pos = 0; //initial position is assumed to be same angle for all planets
+			solar_system[i].radius = planet_radii[i]; 
+			solar_system[i].angle = 0; //initial position is assumed to be same angle for all celestial_bodys
 		}
 		
 		return solar_system;
 	}
 	
-	void get_angular_position(planet* solar_system, float years){
+	void get_position(celestial_body* solar_system, double years){
 		
 		for(int i = 0; i<NUM_PLANETS; i++){
-			// angular_velocity = 360/T; therefore, angular_position = angular_velocity*years = 360/T*years;
+			// angular_velocity = 2*PI/T; therefore, angular_position = angular_velocity*years = (2*PI/T)*years;
 			// normalize angular_position with complete circles removed (because 720 degrees = 360 degrees, angular position-wise) 
-			float a = years/planet_years[i]; 
-			(solar_system+i)->ang_pos = FULL_CIRCLE*(a - floor(a)); //how many degrees?
+			double a = years/planet_years[i]; 
+			(solar_system+i)->angle = 2*PI*a; //how many degrees?
+			(solar_system+i)->x = ((solar_system+i)->radius)*cos((solar_system+i)->angle);
+			(solar_system+i)->y = ((solar_system+i)->radius)*sin((solar_system+i)->angle);
 		}
 		
 		return; 
 	}
 	
-	void syzygy(planet* solar_system){
-		int syzygy[NUM_PLANETS] = {0}; //mark which planets are in syzygy
-		float curr_ang_pos, comp_ang_pos, ang_pos_diff;
-		
-		for(int i = 0; i<NUM_PLANETS; i++){
-			//syzygy[i] = -1 ==>the planet is already part of one syzygy. skip it. 
-			if(syzygy[i]!=-1){
-				syzygy[i] = 1; //current syzygy mark
+	bool check_collinearity(double x1, double y1, double x2, double y2, double x3, double y3){
+		double lambda1 = (x1-x2)/(x2-x3);
+		double lambda2 = (y1-y2)/(y2-y3);
+
+		bool are_collinear = (fabs(lambda1-lambda2)<TOL_LAMBDA_DIFF); //for perfectly collinearity, this would be zero
+		return are_collinear;
+	}
+	
+	void print_syzygy(bool* s, celestial_body* solar_system){
+		int syz = 0;
+		for(int i= 0; i<NUM_PLANETS+1; i++)
+			syz+=s[i];
 			
-				curr_ang_pos = (solar_system+i)->ang_pos;
-				//check for syzygyfication and mark the ones that are syzygied with current planet
-				for(int j = i+1; (j<NUM_PLANETS); j++){
-					if(syzygy[j]!=-1){//of course, it shouldn't be part of another syzygy- check that.
-						comp_ang_pos = (solar_system+j)->ang_pos;
-						ang_pos_diff = abs(comp_ang_pos-curr_ang_pos);
-						if((ang_pos_diff<MAX_ANG_POS_DIFF) || ((ang_pos_diff<HALF_CIRCLE+MAX_ANG_POS_DIFF) && (ang_pos_diff>HALF_CIRCLE-MAX_ANG_POS_DIFF))){
-							syzygy[j] = 1;
-						}
-							
+		if(syz>=3){
+			for(int i = 0; i<NUM_PLANETS+1; i++){
+				if(s[i]==1)
+					printf("%s-", (solar_system+i)->name);
+			}
+			printf(" are in syzygy\n");
+		}
+		return;
+	}
+	
+	void syzygy(celestial_body* solar_system){
+		bool syzygy_index[9] = {0}; 
+		double x1, x2, x3;
+		double y1, y2, y3;
+		bool are_collinear;
+		
+		//check three celestial bodies
+		for(int i= 0; i<NUM_PLANETS-1;i++){
+		
+			for(int j = i+1; j<NUM_PLANETS; j++){
+			
+				//if(i!=j){
+				for(int k = j+1; k<NUM_PLANETS+1; k++){
+					//if(k!=i && k!=j){
+					are_collinear = false;
+					//so darn ugly...
+					x1 = (solar_system+i)->x;
+					x2 = (solar_system+j)->x;
+					x3 = (solar_system+k)->x;
+					y1 = (solar_system+i)->y;
+					y2 = (solar_system+j)->y;
+					y3 = (solar_system+k)->y;
+					
+					are_collinear = check_collinearity(x1, y1, x2, y2, x3, y3);
+						
+					if(are_collinear){
+						syzygy_index[i] = 1;
+						syzygy_index[j] = 1;
+						syzygy_index[k] = 1;				
 					}
+					//}
 				}
 				
-				int sum = 0;
-				for (int j = 0; j<NUM_PLANETS; j++){
-					if (syzygy[j]==1)
-						sum++;
-					
-				}
-				//it's a party only if there are two or more
-				if (sum>=2){
-					printf("Sun");
-					for (int j = i; (j<NUM_PLANETS); j++){
-						if(syzygy[j]==1){
-							printf("-%s", solar_system[j].name);
-							syzygy[j] = -1; //mark it unavailable for other syzygies
-						}
-					}
-					printf(" are in syzygy\n");
-				}
-			
-				for(int j= 0; j<NUM_PLANETS; j++){
-					if(syzygy[j]!=-1)
-						syzygy[j] = 0;	
-				}
+				print_syzygy(syzygy_index, solar_system);
+				//reset syzygy_index array
+				for(int k = 0; k<NUM_PLANETS +1; k++)
+					syzygy_index[k] = 0;
+				//}	
 			}
 			
 		}
@@ -97,12 +123,14 @@
 	}
 	
 	int main(int argc, char* argv[]){
-		float T = atof(argv[1]);
-		planet* solar_system = NULL;
+		double T = atof(argv[1]);
+		celestial_body* solar_system = NULL;
 		
-		solar_system = init_planets();
+		solar_system = init_celestial_bodies();
 		
-		get_angular_position(solar_system, T);
+		get_position(solar_system, T);
+			
+		printf("\n");
 	
 		syzygy(solar_system); 
 		
