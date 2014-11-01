@@ -88,9 +88,8 @@
 		
 			for(int j = i+1; j<NUM_PLANETS; j++){
 			
-				//if(i!=j){
 				for(int k = j+1; k<NUM_PLANETS+1; k++){
-					//if(k!=i && k!=j){
+				
 					are_collinear = false;
 					//so darn ugly...
 					x1 = (solar_system+i)->x;
@@ -107,16 +106,14 @@
 						syzygy_index[j] = 1;
 						syzygy_index[k] = 1;				
 					}
-					//}
+					
 				}
 				
 				print_syzygy(syzygy_index, solar_system);
 				//reset syzygy_index array
 				for(int k = 0; k<NUM_PLANETS +1; k++)
-					syzygy_index[k] = 0;
-				//}	
+					syzygy_index[k] = 0;		
 			}
-			
 		}
 		
 		return;
