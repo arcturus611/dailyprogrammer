@@ -27,6 +27,8 @@
 		*v = '\0';
 		
 		printf("The disemboweled string is %s, and the vowels are %s\n", cons_line, vowels_line);
+		free(cons_line);
+		free(vowels_line);
 		
 		return;
 	}
@@ -37,5 +39,6 @@
 		
 		disemvowel(line);
 		
+		free(line);
 		return 0;
 	}
