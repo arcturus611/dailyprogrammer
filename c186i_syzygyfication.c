@@ -44,7 +44,6 @@
 		
 		for(int i = 0; i<NUM_PLANETS; i++){
 			// angular_velocity = 2*PI/T; therefore, angular_position = angular_velocity*years = (2*PI/T)*years;
-			// normalize angular_position with complete circles removed (because 720 degrees = 360 degrees, angular position-wise) 
 			double a = years/planet_years[i]; 
 			(solar_system+i)->angle = 2*PI*a; //how many degrees?
 			(solar_system+i)->x = ((solar_system+i)->radius)*cos((solar_system+i)->angle);
