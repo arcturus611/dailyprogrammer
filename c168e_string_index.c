@@ -55,6 +55,17 @@
 		printf("Not that many words in the given string!\n");
 		return;
 	}
+	
+	void free_words(word* head){
+		word* curr = head;
+		word* prev = NULL;
+		while(curr!=NULL){
+			prev = curr;
+			curr = curr->next;
+			free(prev); 
+		}
+		return;
+	}
 
 	int main(int argc, char* argv[]){
 		
@@ -79,6 +90,7 @@
 		
 		int n = fgetc(stdin) - '0';
 		index_words(head, n);	
-			
+		free_words(head);
+		free(curr);
 		return 0;
 	}
