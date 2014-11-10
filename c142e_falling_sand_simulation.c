@@ -16,6 +16,7 @@
 			strcpy(env[i], line);
 		}
 		
+		free(line);
 		return;
 	}
 	
