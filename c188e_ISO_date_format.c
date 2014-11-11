@@ -1,6 +1,6 @@
-	//r/dailyprogrammer easy challenge 181, basic equations
-	//using pcre. god help me. (oct 18)
-	// gcc -std=c99 -g -Wall c181e_basic_equations.c -o c181e_basic_equations -lpcre
+	//r/dailyprogrammer easy challenge 188, ISO dates
+	//using pcre.
+	// gcc -std=c99 -g -Wall c188e_ISO_date_format.c -o c188e_ISO_date_format.bin -lpcre
 
 	#include "pcre.h"            	/* PCRE lib        NONE  */
 	#include <stdio.h>              /* I/O lib         C89   */
@@ -9,7 +9,7 @@
 
 	#define EQ_LEN 20
 
-	char* month_names[12] = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+	char* month_names[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	
 	typedef struct _date_{
 		int year;
@@ -90,27 +90,20 @@
 	      //first get the format-
 	      j = 2;
  	      pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, j, &(psubStrMatchStr));
- 	      printf("Our date separater is: %s\n", psubStrMatchStr);
 
 	      if (strcmp(psubStrMatchStr, "/")==0) {
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 1, &(month));
-	      	printf("Month--- %s\n", month);
 	      	int_month = atoi(month);
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 3, &(day));
-	        printf("Day--- %s\n", day);
 	      	int_day = atoi(day);
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 5, &(year));
-	         printf("Year--- %s\n", year);
 	      	int_year = atoi(year);
 	      }else if ((strcmp(psubStrMatchStr, "#")==0)) {	       
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 1, &(month));
-	      	printf("Month--- %s\n", month);
 	      	int_month = atoi(month);
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 3, &(year));
-	        printf("Day--- %s\n", year);
 	      	int_year = atoi(year);
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 5, &(day));
-	         printf("Year--- %s\n", day);
 	      	int_day = atoi(day);
 	      }else if (strcmp(psubStrMatchStr, "*")==0){
 	      	pcre_get_substring(*aLineToMatch, subStrVec, pcreExecRet, 1, &(day));
@@ -140,7 +133,6 @@
 	      	int_year = atoi(year);
 	      }
 	      
-	      printf("We have: %d, %d, %d\n", int_year, int_month, int_day);
 	      if (int_year>=50 && int_year<=99)
 	      	int_year = 1900 + int_year;
 	      else if (int_year>=0 && int_year<=49)
@@ -170,12 +162,12 @@
 	
 	int main(int argc, char *argv[]) {
 
-		char* nonISOdates[] = {"11/06/88", "06#61#17", "jan 03,2015", "23*09*2010", "2014-11-11"};
+		char* nonISOdates[] = {"11/06/88", "06#61#17", "Jan 03,2015", "23*09*2010", "2014-10-11", "Feb 02,1954"};
 		
 		Date* input_dates = NULL; //malloc(2*sizeof(Date));
 	  	input_dates =  read_date_input(nonISOdates); 
 	  	
-	  	for(int i = 0; i<5; i++)
+	  	for(int i = 0; i<6; i++)
 		        printf("ISO date %d is %04d-%02d-%02d\n", i, input_dates[i].year, input_dates[i].month, input_dates[i].day);
 		
 	
