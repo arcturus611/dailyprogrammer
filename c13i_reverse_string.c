@@ -13,7 +13,7 @@ void reverse_string(char* s){
  int l = strlen(s);
  //int m = l/2-1;// taking advantage of truncation in int division to get index of where to stop swapping
  for(int i=0, j = l-1; i<=j ; i++, j--){
-   XORSWAP(s[i], s[j]);
+   XORSWAP(s[ig], s[j]);
  }
  
  printf("Here is the reversed string: %s\n", s); 

@@ -88,7 +88,8 @@
 			}
 		}
 		
-		int n = fgetc(stdin) - '0';
+		int n; 
+		scanf("%d", &n);
 		index_words(head, n);	
 		free_words(head);
 		free(curr);

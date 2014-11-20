@@ -18,7 +18,7 @@ void print_perms(char* str, int start, int len){
  else{
   for(int j = start; j<=len; j++){
    swap((str+start), (str+j));
-   print_perms(str, start+1, len);
+   print_perms(str, start+1, len);//
    swap((str+start), (str+j));
   }
  }
