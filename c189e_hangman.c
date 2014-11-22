@@ -37,8 +37,9 @@
     				k = strchr(p, guess);
     				if(k){
     					curr_guess = true;
+    					num_guessed_correct++; //each correct letter
 	    				mark_guesses[k-str] = 1;
-	    				p++;
+	    				p = k+1;
 	    			}else
 	    				break;
     			}
@@ -52,8 +53,6 @@
     				else printf("_ ");
     			}
     			printf("\n");
-    			if(curr_guess)
-    				num_guessed_correct++;
     		}
     			
     		if(num_guessed_correct<l){
