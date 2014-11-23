@@ -68,6 +68,10 @@
 		}
 		
 		print_sierpinski(&sierpinski, dim);
+		
+		for(int i = 0; i<dim; i++)
+			free(sierpinski[i]);
+		free(sierpinski);
 	}
 	
 	int main(int argc, char* argv[]){
