@@ -5,19 +5,20 @@
 #include<stdlib.h>
 #include<string.h>
 #define MAX_INPUT_LEN 25
+#define MAX_DIGITS 6
 
 typedef struct _number_{
 	int num;
-	int digits[6];
+	int digits[MAX_DIGITS];
 	struct _number_* next;
 }Number;
 
 Number* nStart;
 Number* nCarry;
+Number* nSum;
 
 Number* create_new_number(int c){
 	Number* nTemp = malloc(sizeof(Number));
-	printf("c is = %d\n", c);
 	nTemp->num = c; 
 	int dig_pos = 0;
 	while(c){
@@ -26,12 +27,12 @@ Number* create_new_number(int c){
 		dig_pos++;
 		c /= 10;
 	}
-	for(int i = 0; i<dig_pos; i++)
-		printf("~~Digit %d is %d\n", i, nTemp->digits[i]);
+	
 	return nTemp;
 }
 
 void read_numbers(void){
+
 	char numbers[MAX_INPUT_LEN]; 
 	fgets(numbers, MAX_INPUT_LEN, stdin);
 	
@@ -39,22 +40,24 @@ void read_numbers(void){
 	int len = strlen(numbers);
 	
 	int curr_idx = 0, prev_idx = 0;
-	Number* nCurr;
+	Number* nCurr = NULL;
+	Number* nLast = NULL;
 	
 	while(numbers[curr_idx]!='+') curr_idx++;
 	
 	while(curr_idx<=len){
-		if((numbers[curr_idx]!='+') && (numbers[curr_idx]!='\0'))
+		if((numbers[curr_idx]!='+') && (curr_idx!=len))
 			curr_idx++;
 		else{
-			char curr_num[MAX_INPUT_LEN];
+			char curr_num[MAX_INPUT_LEN] = {'0'};
 			strncpy(curr_num, &numbers[prev_idx], curr_idx-prev_idx);
 			
 			if(nStart==NULL){
 				nStart = create_new_number(atoi(curr_num));	
-				nCurr = nStart->next;
+				nCurr = nStart;
 			}else{
-				nCurr = create_new_number(atoi(curr_num));
+				nLast = nCurr;
+				nLast->next = create_new_number(atoi(curr_num));
 				nCurr = nCurr->next;
 			}
 			
@@ -63,28 +66,84 @@ void read_numbers(void){
 		}
 	}
 	
-	/*
-	/////
-	FILE* fp = stdin;
+	return;
+}
+
+void calculate_carry(void){
+	Number* nCurr = malloc(sizeof(Number));
+	int carry = 0;
 	
-	int c = fgetc(fp) - 48; //zero ascii value is 48
-	nStart = create_new_number(c);
+	for(int i = 0; i<MAX_DIGITS; i++){ //because you only add digits 0 to MAX_DIGITS-1 for carry
+		nCurr = nStart;
+		int sum = 0;
+		
+		while(nCurr){
+			sum+=(nCurr->digits[i]);
+			nCurr = nCurr->next;
+		}
+		sum+=carry;
+
+		carry = sum/10;
+		
+		if(i<MAX_DIGITS-1){
+			nCarry->digits[i+1] = carry;
+		}
+			
+		sum%=10;
+		nSum->digits[i] = sum;
+	}
+
+	return;
+}
+
+void display_carry_addition(void){
+	Number* nCurr = nStart;
+	int i;
 	
-	Number* nCurr = nStart->next;
-	printf("Initialized nStart: %d\n", nStart->num);	
-	while(fgetc(fp)!='\n'){
-		c = fgetc(fp);
-		nCurr = create_new_number(c);
+	while(nCurr){	
+		for(i = MAX_DIGITS-1; i>=0; i--){
+			if(nCurr->digits[i]!=0)
+				break;
+			else
+				printf(" ");
+		}
+		for(int j = i ; j>=0; j--)
+			printf("%c", nCurr->digits[j]+48); //digit to char
+		printf("\n");
 		nCurr = nCurr->next;
 	}
-	*/
-
+	printf("-------\n");
+	
+	for(i = MAX_DIGITS-1; i>=0; i--){
+		if(nSum->digits[i]!=0)
+			break;
+		else
+			printf(" ");
+	}
+	for(int j = i ; j>=0; j--)
+		printf("%c", nSum->digits[j]+48); //digit to char
+	printf("\n");
+	
+	printf("-------\n");
+	for(i = MAX_DIGITS-1; i>=0; i--){
+		if(nCarry->digits[i]!=0)
+			break;
+		else
+			printf(" ");
+	}
+	for(int j = i ; j>=0; j--)
+		printf("%c", nCarry->digits[j]+48); //digit to char
+	printf("\n");
+	return;		
 }
 
 int main(int argc, char* argv[]){
 	nStart = NULL;
-	nCarry = NULL;
-	
+	nCarry = malloc(sizeof(Number));
+	nSum = malloc(sizeof(Number));
+		
 	read_numbers();
-//	display_carry();
+	calculate_carry();
+	display_carry_addition();
+	return 1;
 }
