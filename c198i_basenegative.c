@@ -51,7 +51,7 @@
 			place_value++;		
 		}	
 		
-		while(n){
+		while(n | carry){			
 			x = n%10; 
 			x+=carry; 
 			
