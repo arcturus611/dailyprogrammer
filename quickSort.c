@@ -11,7 +11,7 @@ void swap(int* x, int idx1, int idx2){
 }
 
 int partition(int* a, int end1, int end2){
-	int pivot = end2; //(end1+end2)/2; 
+	int pivot = (end1+end2)/2; 
 	int i;
 	int newPivot = end1;  // this is what we need to calculate and return
 
@@ -30,7 +30,7 @@ int partition(int* a, int end1, int end2){
 }
 
 
-void quicksort(int* a, int end1, int end2, int array_size){
+void quicksort(int* a, int end1, int end2){
 	if (end2-end1<=0){
 		return;
 	}
@@ -38,30 +38,27 @@ void quicksort(int* a, int end1, int end2, int array_size){
 	int newPivot; 
 	newPivot = partition(a, end1, end2);
 
-	for(int i = 0; i<array_size; i++)
+	/*for(int i = 0; i<array_size; i++)
 		printf("%d ", a[i]);
-	printf("\n");
-	
+	printf("\n");*/
+	/*
 	quicksort(a, end1, newPivot-1, array_size); 
 
-	quicksort(a, newPivot+1, end2, array_size); 
+	quicksort(a, newPivot+1, end2, array_size); */
+	
+	quicksort(a, end1, newPivot-1); 
+
+	quicksort(a, newPivot+1, end2); 
 	
 	return; 
 }
 
 int main(int argc, char** argv){
 
-/*
-	int x[LENGTH]; 
-	int i;
-	srand(time(NULL)); 
 
-//	printf(" \n The given array is :\n "); 
-	for(i =0; i< LENGTH; i++){
-		x[i] = rand()%50 + 1; 
-		printf("%d ", x[i]); 
-	}
-	printf("\n"); */
+/*	int x[LENGTH]; 
+	int i;
+	srand(time(NULL)); */
 	
 	int _ar_size;
 	scanf("%d", &_ar_size);
@@ -71,11 +68,17 @@ int main(int argc, char** argv){
 		scanf("%d", &x[_ar_i]); 
 	}	
 
-	quicksort(x, 0, _ar_size-1, _ar_size);
-
-/*	printf(" \n The sorted array is : "); 
-	for(i =0; i< LENGTH; i++){
+	printf(" \n The given array is :\n "); 
+	for(int i =0; i< _ar_size; i++){
 		printf("%d ", x[i]); 
 	}
-	printf("\n");*/ 
+	printf("\n"); 
+	//quicksort(x, 0, _ar_size-1, _ar_size);
+	quicksort(x, 0, _ar_size-1);
+
+	printf(" \n The sorted array is : "); 
+	for(int i =0; i< _ar_size; i++){
+		printf("%d ", x[i]); 
+	}
+	printf("\n");
 }
