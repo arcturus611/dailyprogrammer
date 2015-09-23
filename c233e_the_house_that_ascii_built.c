@@ -118,17 +118,14 @@ My comment: This is such a lovely problem. Totally easy, but fun. Hard combinati
 		out[row-1][col+roof_height] = 'o';*/
 		
 		/*In cases where the tall structure is at the very start or the very end, we extend the end walls all the way down*/
-		if((row<(num_rows-1)) && (col==0)){//{
-			for(int i = row; i<num_rows-1; i++)
-				out[i][col] = '|';
+		//if((row<(num_rows-1)) && (col==0)){//{
+		if(row<(num_rows-1)){
+			for(int i = row; i<num_rows-1; i++){
+				if(!(out[i][col]=='+' && (out[i-1][col-1]=='\\' || out[i-1][col+1]=='/'))) out[i][col] = '|';
+				if(!(out[i][col+base_len-1]=='+' && (out[i-1][col+base_len-2]=='\\' || out[i-1][col+base_len]=='/'))) out[i][col+base_len-1]= '|';
+			}
 		}
-		
-		if((row<(num_rows-1)) && ((col+base_len)==num_cols)){
-			for(int i = row; i<num_rows-1; i++)
-				out[i][num_cols-1] = '|';
-		}
-		
-		
+			
 		return;
 	}
 	
@@ -162,6 +159,7 @@ My comment: This is such a lovely problem. Totally easy, but fun. Hard combinati
      	        out[num_rows-2][door_abs_pos+1] = '|';
      	        
      	        //draw windows
+     	        
 
      	        return;
      			
@@ -174,44 +172,64 @@ My comment: This is such a lovely problem. Totally easy, but fun. Hard combinati
 		for(int OUTERLOOP = 0; OUTERLOOP<MAX_NUM_TOWERS; OUTERLOOP++){
 			if(get_out_flag) break;
 			int col = walls[OUTERLOOP][1]; 
-			int row = walls[OUTERLOOP][0];
+			int row; 
+		//	int row = walls[OUTERLOOP][0];
 			int base_len = walls[OUTERLOOP+1][1]-walls[OUTERLOOP][1] + 1;
 			if (base_len<=1) {
 				base_len = num_cols - walls[OUTERLOOP][1];
 				get_out_flag  =1;
 			}
-			if((col>0) && (row<(num_rows-1)) && (col+base_len<num_cols)){//clean up only for inner walls
-				if(!(((out[row-3][col-1]=='\\') || (out[row-3][col+1]=='/')) && ((out[row-1][col-1]=='\\') || (out[row-1][col+1]=='/')))){
+			
+			
+			for( row = num_rows-1; row>=walls[OUTERLOOP][0]; row--){
+			
+			
+			// Different types of clean up: 
+			if((col>0) && (row<(num_rows-1))){// && (col+base_len<num_cols)){//clean up only for inner walls
+				if(!(((out[row-2][col-1]=='\\') || (out[row-2][col+1]=='/')) && ((out[row][col-1]=='\\') || (out[row][col+1]=='/')))   &&        !(((out[row-2][col-1]=='\\') || (out[row-2][col+1]=='/')) && (out[row+1][col]=='|'))   &&  !(((out[row][col-1]=='\\') || (out[row][col+1]=='/')) && (out[row-1][col]=='|')) &&  !(((out[row-1][col]=='|')  && (out[row+1][col]=='|')))    &&    !(out[row][col]=='+' && ( out[row-1][col-1]=='\\'  ||  out[row-1][col+1]=='/' ))   ){
 				//if(!((out[row-1][col-1]=='\\') || (out[row-1][col+1]=='/'))){
+				//printf("DETAILS OF WHY WE ARE HERE in CATEGORY 1: top_left = %c, top_right = %c, bottom_left = %c, bottom_right = %c\n", out[row-2][col], out[row-2][col+2], out[row-1][col-1], out[row-1][col+1]);
 					printf("Clean up category 1!\nDETAILS: col = %d, row = %d, num_rows = %d\n", col, row, num_rows);
-					out[row-1][col]=' '; 
-					out[row][col] = ' ';
+					out[row][col]=' '; 
+					//out[row][col] = ' ';
 				//}
 				}
 			}
 		
 			if((col+base_len<num_cols) && (row<num_rows-1)){//clean up only for inner walls
-				if(!(((out[row-3][col + base_len -2]=='\\') || (out[row-3][col+base_len]=='/')) && ((out[row-1][col+base_len-2]=='\\') || (out[row-1][col+base_len]=='/')))){
-			
-					printf("DETAILS OF WHY WE ARE HERE: top_left = %c, top_right = %c, bottom_left = %c, bottom_right = %c\n", out[row-3][col+base_len-2], out[row-3][col+base_len], out[row-1][col+base_len-2], out[row-1][col+base_len]);
-					printf("Clean up category 2!\n DETAILS: col = %d, base_len = %d, num_cols = %d, row = %d, num_rows = %d\n", col, base_len, num_cols, row, num_rows);
-					out[row-1][col+base_len-1]=' '; 
-					out[row][col+base_len-1] = ' ';
+				if(!(((out[row-2][col+base_len-2]=='\\') || (out[row-2][col+base_len]=='/')) && ((out[row][col+base_len-2]=='\\') || (out[row][col+base_len]=='/')))   &&        !(((out[row-2][col + base_len - 2]=='\\') || (out[row-2][col+base_len]=='/')) && (out[row+1][col+base_len-1]=='|'))   &&  !(((out[row][col+base_len-2]=='\\') || (out[row][col+base_len]=='/')) && (out[row-1][col+base_len-1]=='|')) &&  !(((out[row-1][col+base_len-1]=='|')  && (out[row+1][col+base_len-1]=='|')))    &&     !(out[row][col+base_len-1]=='+' && ( out[row-1][col+base_len-2]=='\\'  ||  out[row-1][col+base_len]=='/' )) ){
+					//printf("DETAILS OF WHY WE ARE HERE: top_left = %c, top_right = %c, bottom_left = %c, bottom_right = %c\n", out[row-3][col+base_len-2], out[row-3][col+base_len], out[row-1][col+base_len-2], out[row-1][col+base_len]);
+					//printf("Clean up category 2!\n DETAILS: col = %d, base_len = %d, num_cols = %d, row = %d, num_rows = %d\n", col, base_len, num_cols, row, num_rows);
+					out[row][col+base_len-1]=' '; 
+					//out[row][col+base_len-1] = ' ';
 				
 				}
 			}
 		
-			if((col+base_len<num_cols) && (row==num_rows-1)){
+			/*if((col+base_len<num_cols) && (row==num_rows-1)){
 				printf("Clean up category 3!\n DETAILS: base_len = %d, num_cols = %d\n", base_len, num_cols);
-				out[row-1][col+base_len-1]=' ';
-				if(col>0) out[row-1][col] = ' ';
-			}
+				out[row][col+base_len-1]=' ';
+				if(col>0) out[row][col] = ' ';
+			}*/
 		
-			if((col!=0) && (col+base_len==num_cols)){
+		/*	if((col!=0) && (col+base_len==num_cols)){
+			
+			
 				printf("Clean up category 4!\n, DETAILS: base_len = %d, num_cols = %d\n", base_len, num_cols);
 				out[row-1][col] = ' ';
 				if(row<num_rows-1) out[row][col] = ' ';
+				
+				
 			}
+		*/	
+			}
+	
+		row = walls[OUTERLOOP][0];
+		if (col!=0) {
+			if(out[row-3][col-1]=='\\' || out[row-3][col+1]=='/') out[row-2][col] = '+';
+		}
+		
+		if(out[row-3][col+base_len-2]=='\\' || out[row-3][col+base_len]=='/') out[row-2][col+base_len-1] = '+';
 		
 		}
 		
