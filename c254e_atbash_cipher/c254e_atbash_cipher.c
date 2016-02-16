@@ -4,18 +4,10 @@
 	#include<stdlib.h>
 	#include<string.h>
 	#include<ctype.h>
+	
+	#include "print_string.h"
 	#define MAX_LEN 1000
-	
-	void print_string(char* inp){
-		char* p = inp;
-		while((*p)!='\n'){
-			printf("%c", *p);
-			p++;
-		}
-		printf("\n");
-		return;
-	}
-	
+		
 	char* atbash(char* inp){
 		char* cipher_input = (char *)malloc(MAX_LEN*sizeof(char));
 		char* src = inp;
