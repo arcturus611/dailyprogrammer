@@ -5,39 +5,49 @@
 	#include<string.h>
 	#include<ctype.h>
 	#define MAX_LEN 1000
-	#define LC_A 97
-	#define LC_Z 122
-	#define UC_A 65
-	#define UC_Z 90
 	
-//	char* atbash(char* inp){
-	void atbash(char* inp){
-		int l = strlen(inp);
-		char* cipher_input = (char *)malloc(l*sizeof(char));
-		for (int i = 0; i<l; i++){
-			if (inp[i] >= LC_A && inp[i]<=LC_Z){
-				cipher_input[i] = LC_A + LC_Z - inp[i];
-			}
-			else if (inp[i] >= UC_A && inp[i]<= UC_Z){
-				cipher_input[i] = UC_A + UC_Z - inp[i];
-			}
-			else cipher_input[i] = inp[i];
-			
-			printf("%c", cipher_input[i]); 
+	void print_string(char* inp){
+		char* p = inp;
+		while((*p)!='\n'){
+			printf("%c", *p);
+			p++;
 		}
+		printf("\n");
+		return;
+	}
+	
+	char* atbash(char* inp){
+		char* cipher_input = (char *)malloc(MAX_LEN*sizeof(char));
+		char* src = inp;
+		char* dest = cipher_input;
 		
-		//return 0;
-		//return cipher_input; 
+		while((*src)!='\n'){
+			if ((*src) >= 'a' && (*src)<= 'z'){
+				*dest = 'a' + 'z' - (*src);
+			}
+			else if ((*src) >= 'A' && (*src)<= 'Z'){
+				*dest = 'A' + 'Z' - (*src);
+			}
+			else *dest = *src;
+			
+			src++;
+			dest++;
+		}
+		*dest = '\n';
+		
+		return cipher_input;
 	}
 
 	int main (int argc, char* argv[]){
 		char* input = (char *)malloc(MAX_LEN*sizeof(char));
 		input = fgets(input, MAX_LEN, stdin);
+		char* output = NULL; 
+		output = atbash(input);
 		
-		atbash(input);
-		//cipher = atbash(input);
-		
-	//	print_string(cipher);
+		printf("The given input is: ");
+		print_string(input);
+		printf("... and the Atbash cipher is: "); 
+		print_string(output);
 		
 		return 0;
 	}
