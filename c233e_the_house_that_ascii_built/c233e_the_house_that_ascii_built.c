@@ -17,7 +17,7 @@ My comment: This is such a lovely problem. Totally easy, but fun. Hard combinati
 		if((pos = strchr(n_c, '\n'))!=NULL) *pos = '\0';
 		N = atoi(n_c); // Isn't there a saner way to do this? I just want to read an int, for goodness' sake!
 		
-		printf("Size of inpiut is %d\n", N);
+		printf("Size of iut is %d\n", N);
 		
 		*arr = malloc(sizeof(char* )*N); //pointer to N arrays of chars
 		for(int i = 0; i<N; i++){
