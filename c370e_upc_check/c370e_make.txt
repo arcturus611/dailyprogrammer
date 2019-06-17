@@ -1,0 +1,2 @@
+c370e_upccheck: c370e_upc_check.c
+	gcc -std=c99 -Wall c370e_upc_check.c -o c370e_upccheck
