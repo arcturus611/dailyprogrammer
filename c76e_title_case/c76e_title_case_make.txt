@@ -1,0 +1,2 @@
+c76e_title_case: c76e_title_case.c
+	gcc -std=c99 -Wall c76e_title_case.c -o c76e_title_case
