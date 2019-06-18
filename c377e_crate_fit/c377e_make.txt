@@ -1,0 +1,2 @@
+c377e: c377e_crate_fit.c
+	gcc -std=c99 -Wall c377e_crate_fit.c -o c377e_crate_fit -lm
