@@ -1,0 +1,2 @@
+c375e: c375e.c
+	gcc -std=c99 -Wall c375e.c -o c375e -lm
