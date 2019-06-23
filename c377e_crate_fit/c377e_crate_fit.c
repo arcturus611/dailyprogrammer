@@ -12,8 +12,16 @@
 		return x;
 	}
 	
+	int fit1(int X, int Y, int x, int y){
+		return (X/x)*(Y/y);
+	}
+	 
+	int fit2(int X, int Y, int x, int y){
+		return (int)fmax(fit1(X, Y, x, y), fit1(X, Y, y, x)); 
+	}
+	
 	int main(int argc, char* argv[]){
-		int X, Y, x, y, num_crates;
+		int X, Y, x, y;
 		
 		if (argc < 5){
 			printf("Error! Please enter four arguments!\n"); 
@@ -26,8 +34,7 @@
 		y = ptoi(argv[4]);
 		
 		printf("The inputs are %d, %d, %d, and %d\n", X, Y, x, y);
-		num_crates = (X/x)*(Y/y);
-		printf("The number of crates we can pack is %d\n", num_crates);
-		
+		printf("The number of crates we can pack using FIT 1 is %d\n", fit1(X, Y, x, y));
+		printf("The number of crates we can pack using FIT 2 is %d\n", fit2(X, Y, x, y));
 		return 0;
 	}
