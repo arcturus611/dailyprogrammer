@@ -1,0 +1,2 @@
+c13i: c13i_reverse_string.c
+	gcc -std=c99 -g -Wall c13i_reverse_string.c -o c13i
