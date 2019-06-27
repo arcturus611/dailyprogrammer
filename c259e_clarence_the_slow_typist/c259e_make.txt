@@ -1,0 +1,2 @@
+c259e: c259e_slow_typist.c
+	gcc -std=c99 -g -o c259e c259e_slow_typist.c -lm

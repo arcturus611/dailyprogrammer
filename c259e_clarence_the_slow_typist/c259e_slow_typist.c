@@ -14,7 +14,7 @@
 		
 		int p = strchr(keys, c) - keys;
 		
-		/* Because of how the keypad is built, we can get coordinates easily like this */
+		/* Because of the layout of the keypad, we can get coordinates easily like this */
 		*coords = p/3;
 		*(coords + 1) = p%3;
 		
@@ -37,8 +37,8 @@
 		/* If you don't malloc here, segmentation fault. 
 		Want to be able to do this by prev_coords[2] and curr_coords[2]
 		since malloc seems silly to use here */
-		int* prev_coords = (int *)malloc(2*sizeof(int));
-		int* curr_coords = (int* )malloc(2*sizeof(int));
+		int* prev_coords = malloc(2*sizeof(int));
+		int* curr_coords = malloc(sizeof(int[2])); //demonstrating different ways to malloc
 		
 		/* Note that the last char is NULL, not RETURN since fgets 
 		stops at RETURN without taking it */
@@ -51,19 +51,20 @@
 			prev++;
 			curr++;
 		}
-		
-		
+			
 		return d;
 	}
 	
 	int main (int argc, char* argv[]){
-			
-		char* ip_add = (char *)malloc( MAX_LEN_IP*sizeof(char) );
+	
+		printf("Welcome to Challenge 259 [Easy]! Please enter the IP address you wish to find the \"eagle\" distance for\n");		
+		char* ip_add = malloc( MAX_LEN_IP*sizeof(*ip_add));
 		ip_add = fgets( ip_add, MAX_LEN_IP, stdin );
 		
 		float total_dist = calc_dist(ip_add);
 			
-		printf("Clarence moves %.2f cm\n", total_dist);
-			
+		printf("Clarence moves %.2f cm\n\n\n", total_dist);
+	
+		free(ip_add);		
 		return 0;
 	}
